@@ -131,7 +131,10 @@ public:
 	void detach() { m_bstop = true; }
 
 private:
-	static void WriteThreadEntrance(Log *self);
+	Log(const Log &) {}
+	Log& operator= (const Log &) { return *this; }
+
+	static void writeThreadEntrance(Log *self);
 	void writeThread();
 	void writeToLocal(buffer *);
 	
@@ -140,8 +143,8 @@ private:
 	void unlock() { m_lock.unlock(); }
 
 
-	void AddFormatTime(struct tm &t_now);
-	void CheckCurrentBuffer(int nday);
+	void addFormatTime(struct tm &t_now);
+	void checkCurrentBuffer(int nday);
 
 
 private:

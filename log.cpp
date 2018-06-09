@@ -34,7 +34,7 @@ void Log::start()
 	m_sFilePath = "./";
 #endif
 	m_bstop = false;
-	w_thread = thread(Log::WriteThreadEntrance, this);
+	w_thread = thread(Log::writeThreadEntrance, this);
 }
 
 Log::~Log()
@@ -42,7 +42,7 @@ Log::~Log()
 	w_thread.join();
 }
 
-void Log::WriteThreadEntrance(Log *Log)
+void Log::writeThreadEntrance(Log *Log)
 {
 	Log->writeThread();
 }
@@ -135,8 +135,8 @@ Log& Log::begin()
 	struct tm t_now = *localtime(&now);
 	ins.lock();
 //---- ¡ŸΩÁ+
-	ins.CheckCurrentBuffer(t_now.tm_yday);
-	ins.AddFormatTime(t_now);
+	ins.checkCurrentBuffer(t_now.tm_yday);
+	ins.addFormatTime(t_now);
 	return ins;
 }
 
@@ -191,11 +191,11 @@ Log& Log::operator<<(double d)
 
 Log& Log::operator<<(long long big)
 {
-	m_pBufferA->writeformat<long long>("%lld", big);
+	m_pBufferA->writeformat<long long>("%lld,", big);
 	return *this;
 }
 
-void Log::CheckCurrentBuffer(int nday)
+void Log::checkCurrentBuffer(int nday)
 {
 	if (m_pBufferA->nToday == 0)
 		m_pBufferA->nToday = nday;
@@ -217,7 +217,7 @@ void Log::CheckCurrentBuffer(int nday)
 	}
 }
 
-void Log::AddFormatTime(struct tm &t_now)
+void Log::addFormatTime(struct tm &t_now)
 {
 	static char timeFormat[50];
 	size_t nsize = strftime(timeFormat, 50, "%Y-%m-%d %I:%M:%S ", &t_now);
